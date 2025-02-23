@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-market-tracker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: stock-market-tracker
+  template:
+    metadata:
+      labels:
+        app: stock-market-tracker
+    spec:
+      containers:
+        - name: api-gateway
+          image: stock-market-tracker/api_gateway
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+        - name: stock-fetcher
+          image: stock-market-tracker/stock_fetcher
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+        - name: stock-processor
+          image: stock-market-tracker/stock_processor
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+
