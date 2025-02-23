@@ -1,10 +1,12 @@
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+# from tensorflow import keras
+# from keras.models import Sequential
+# from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional
+from keras_preprocessing.text import Tokenizer
+from keras_preprocessing.sequence import pad_sequences
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import LSTM, Dense, Embedding, Bidirectional
 
 # Define Sentiment Analysis Model
 class SentimentAnalysis:
@@ -37,7 +39,6 @@ class SentimentAnalysis:
         prediction = self.model.predict(padded_sequence)
         return "Positive" if prediction[0][0] > 0.5 else "Negative"
     
-
 if __name__ == "__main__":
 
     # Sample Dataset
