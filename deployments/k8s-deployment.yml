@@ -1,45 +1,80 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stock-market-tracker
+  name: api-gateway
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: stock-market-tracker
+      app: api-gateway
   template:
     metadata:
       labels:
-        app: stock-market-tracker
+        app: api-gateway
     spec:
       containers:
-        - name: api-gateway
-          image: stock-market-tracker/api_gateway
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-
-        - name: stock-fetcher
-          image: stock-market-tracker/stock_fetcher
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-
-        - name: stock-processor
-          image: stock-market-tracker/stock_processor
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "500m"
-            limits:
-              memory: "1Gi"
-              cpu: "1"
-
+      - name: api-gateway
+        image: stock-market-tracker/api_gateway
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-service
+spec:
+  selector:
+    app: api-gateway
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-fetcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stock-fetcher
+  template:
+    metadata:
+      labels:
+        app: stock-fetcher
+    spec:
+      containers:
+      - name: stock-fetcher
+        image: stock-market-tracker/stock_fetcher
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stock-processor
+  template:
+    metadata:
+      labels:
+        app: stock-processor
+    spec:
+      containers:
+      - name: stock-processor
+        image: stock-market-tracker/stock_processor
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "250m"

@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
 import requests
 import os
@@ -11,19 +11,25 @@ import os
 ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 STOCK_SYMBOL = "AAPL"
 
+if not ALPHA_VANTAGE_API_KEY:
+    raise ValueError("API Key is missing. Set ALPHA_VANTAGE_API_KEY as an environment variable.")
+
 def fetch_historical_data(symbol):
     """Fetch historical stock price data from Alpha Vantage API."""
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={ALPHA_VANTAGE_API_KEY}&outputsize=full"
     response = requests.get(url).json()
-    
+
     if "Time Series (Daily)" not in response:
+        print(f"API Error: {response}")
         raise ValueError("Invalid API response. Check API key and quota limits.")
-    
+
     data = response["Time Series (Daily)"]
     df = pd.DataFrame.from_dict(data, orient="index")
+    df.columns = df.columns.str.lower()
+    
     df = df.rename(columns={"4. close": "Close"}).astype(float)
     df = df[["Close"]].sort_index()
-    
+
     return df
 
 # Fetch and preprocess data
@@ -40,6 +46,10 @@ for i in range(len(df_scaled) - sequence_length):
     y.append(df_scaled[i+sequence_length])
 
 X, y = np.array(X), np.array(y)
+X = X.reshape(-1, sequence_length, 1)
+y = y.reshape(-1, 1)
+
+print("X shape:", X.shape, "y shape:", y.shape)
 
 # Define LSTM model
 model = Sequential([
@@ -52,8 +62,10 @@ model = Sequential([
 model.compile(optimizer="adam", loss="mean_squared_error")
 
 # Train the model
-model.fit(X, y, batch_size=32, epochs=10)
+model.fit(X, y, batch_size=16, epochs=10)  # Reduced batch size for small datasets
 
 # Save the trained model
-model.save("model.h5")
+if not os.path.exists("models"):
+    os.makedirs("models")
+model.save("models/model.h5")
 print("Model saved successfully!")

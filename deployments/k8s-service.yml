@@ -1,16 +1,14 @@
-## stock-market-tracker/deployments/k8s-service.yml
-
 apiVersion: v1
 kind: Service
 metadata:
   name: api-gateway-service
 spec:
   selector:
-    app: stock-market-tracker
+    app: api-gateway
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 5000  # Updated to match API Gateway container port
   type: LoadBalancer
 
 ---
@@ -20,7 +18,7 @@ metadata:
   name: stock-processor-service
 spec:
   selector:
-    app: stock-market-tracker
+    app: stock-processor
   ports:
     - protocol: TCP
       port: 50051
@@ -34,12 +32,12 @@ metadata:
   name: kafka-service
 spec:
   selector:
-    app: stock-market-tracker
+    app: kafka
   ports:
     - protocol: TCP
       port: 9092
       targetPort: 9092
-  type: ClusterIP
+  type: NodePort  # Changed from ClusterIP to NodePort for external access
 
 ---
 apiVersion: v1
@@ -48,7 +46,7 @@ metadata:
   name: mongo-service
 spec:
   selector:
-    app: stock-market-tracker
+    app: mongo
   ports:
     - protocol: TCP
       port: 27017

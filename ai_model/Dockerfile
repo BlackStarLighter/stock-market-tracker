@@ -1,20 +1,17 @@
-# Use an official Python runtime as a parent image
+# Use an official Python image as the base
 FROM python:3.9
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Copy the AI model files to the container
+COPY . /app/
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install required Python dependencies
+RUN pip install --no-cache-dir fastapi uvicorn tensorflow numpy pandas scikit-learn
 
-# Copy the application files into the container
-COPY . .
+# Expose the FastAPI port
+EXPOSE 8000
 
-# Expose the port for the AI service
-EXPOSE 50051
-
-# Run the AI model service
-CMD ["python", "sentiment_analysis.py"]
+# Command to run FastAPI app
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

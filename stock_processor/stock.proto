@@ -2,15 +2,19 @@ syntax = "proto3";
 
 package stock;
 
+// Define the StockService
+service StockService {
+    // RPC method to get stock data
+    rpc GetStock (StockRequest) returns (StockResponse);
+}
+
+// Request message containing a stock symbol
 message StockRequest {
     string symbol = 1;
 }
 
+// Response message containing stock details
 message StockResponse {
     string symbol = 1;
-    float price = 2;
-}
-
-service StockService {
-    rpc GetStock (StockRequest) returns (StockResponse);
+    double price = 2;
 }

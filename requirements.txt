@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+grpcio
+grpcio-tools
+requests
+kafka-python
+pymongo>=3.12
+tensorflow>=2.6
+numpy>=1.19
+pandas>=1.2
+scikit-learn>=0.24

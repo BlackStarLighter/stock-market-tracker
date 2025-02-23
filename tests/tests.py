@@ -26,7 +26,7 @@ class TestApiGateway(unittest.TestCase):
 class TestStockFetcher(unittest.TestCase):
     @patch('stock_fetcher.requests.get')
     def test_fetch_stock_data_success(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = {'Global Quote': {'05. price': '150.00'}}
+        mock_requests_get.return_value.json.return_value = {"Global Quote": {"05. price": "150.00"}}
         price = fetch_stock_data('AAPL')
         self.assertEqual(price, 150.00)
 
@@ -39,7 +39,7 @@ class TestStockFetcher(unittest.TestCase):
     @patch('stock_fetcher.produce_stock_message')
     def test_produce_stock_message(self, mock_produce):
         produce_stock_message('AAPL', 150.0)
-        mock_produce.assert_called_with('AAPL', 150.0)
+        mock_produce.assert_called_once_with('AAPL', 150.0)
 
 class TestStockProcessor(unittest.TestCase):
     @patch('stock_processor.StockProcessor.get_stock_from_db')
@@ -53,14 +53,16 @@ class TestStockProcessor(unittest.TestCase):
     def test_store_stock_data(self, mock_store):
         stock_processor = StockProcessor()
         stock_processor.store_stock_data('AAPL', 150.0)
-        mock_store.assert_called_with('AAPL', 150.0)
+        mock_store.assert_called_once_with('AAPL', 150.0)
 
-    @patch('stock_processor.StockProcessor.GetStock')
+    @patch.object(StockProcessor, 'GetStock')
     def test_grpc_get_stock(self, mock_grpc):
         request = stock_pb2.StockRequest(symbol='AAPL')
         mock_grpc.return_value = stock_pb2.StockResponse(symbol='AAPL', price=150.0)
+        
         stock_processor = StockProcessor()
         response = stock_processor.GetStock(request, None)
+
         self.assertEqual(response.symbol, 'AAPL')
         self.assertEqual(response.price, 150.0)
 

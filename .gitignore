@@ -1,0 +1,89 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.dll
+*.dylib
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.envrc
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Logs and cache
+*.log
+*.out
+*.err
+logs/
+cache/
+*.sqlite3
+
+# IDE/editor config files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# macOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+desktop.ini
+
+# gRPC & protobuf generated files
+*_pb2.py
+*_pb2_grpc.py
+
+# Ignore data files
+*.csv
+*.db
+*.sqlite
+*.json
+*.xml
+
+# Dependency files
+requirements.txt
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.bin
+
+# Test coverage reports
+.coverage
+htmlcov/
+*.cover
+*.py,cover
+nosetests.xml
+coverage.xml
+
+# Unit test / pytest
+.tox/
+.pytest_cache/
+unittest.xml
+
+# Ignore large model files (if any)
+model_weights/
+models/
+*.h5
+*.ckpt
+*.tflite
+
+# Ignore API keys and credentials
+config.yaml
+secrets.json
