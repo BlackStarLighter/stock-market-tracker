@@ -1,0 +1,9 @@
+tensorflow
+scikit-learn
+pandas
+numpy
+nltk
+flask
+grpcio
+protobuf
+gunicorn

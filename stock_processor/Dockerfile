@@ -1,5 +1,3 @@
-## stock-market-tracker/stock_processor/Dockerfile
-
 # Use an official Python runtime as a parent image
 FROM python:3.9
 
